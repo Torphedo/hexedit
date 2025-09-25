@@ -10,8 +10,6 @@
 #include <cstddef>
 #include <cmath>
 
-using std::size_t;
-
 namespace Table {
     size_t startIndex = 0;
     size_t endIndex = 0;

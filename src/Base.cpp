@@ -3,18 +3,16 @@
 #include <sstream>
 #include <algorithm>
 
-using std::string;
-
 namespace Base {
     const char digits[] =
         {'0', '1', '2', '3', '4', '5', '6', '7',
          '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-    string pad(const string &str, unsigned int lenAfterPad) { 
+    std::string pad(const std::string &str, unsigned int lenAfterPad) { 
         if (str.length() >= lenAfterPad)
             return str;
         else
-            return string(lenAfterPad - str.length(), '0') + str;
+            return std::string(lenAfterPad - str.length(), '0') + str;
     }
 
     char hexOf(int value) {
@@ -32,7 +30,7 @@ namespace Base {
         throw std::range_error("Base::charOf()");
     }
 
-    string toHex(int value, unsigned int lenAfterPad = 2) {
+    std::string toHex(int value, unsigned int lenAfterPad = 2) {
         if (value == 0)
             return pad("0", lenAfterPad);
         if (value < 0)
@@ -44,7 +42,7 @@ namespace Base {
             value /= 16;
         }
 
-        string str = ss.str();
+        std::string str = ss.str();
         std::reverse(str.begin(), str.end());
         return pad(str, lenAfterPad);
     }

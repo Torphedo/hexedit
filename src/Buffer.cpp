@@ -4,39 +4,35 @@
 #include <string>
 #include <map>
 
-using std::size_t;
-using std::ios;
-using std::string;
-using std::map;
-
 namespace Buffer {
     char *buffer;
-    string filePath;
+    std::string filePath;
     size_t fileSize;
     bool modified = false;
-    map<int, int> og;
+    std::map<int, int> og;
 
-    void load(string file) {
+    void load(std::string file) {
         filePath = file;
-        std::ifstream ifs(file, ios::in | ios::binary);
+        std::ifstream ifs(file, std::ios::in | std::ios::binary);
 
-        ifs.seekg(0, ios::end);
+        ifs.seekg(0, std::ios::end);
         fileSize = ifs.tellg();
         buffer = new char[fileSize];
 
-        ifs.seekg(0, ios::beg);
+        ifs.seekg(0, std::ios::beg);
         ifs.read(buffer, fileSize);
         ifs.close();
     }
 
     void save(SaveOption option) {
         std::string outFilePath;
-        if (option == SaveOption::SAME_FILE)
+        if (option == SaveOption::SAME_FILE) {
             outFilePath = filePath;
-        else
+        } else {
             outFilePath = "mod_" + filePath + "";
+        }
 
-        std::ofstream ofs(outFilePath, ios::out | ios::binary);
+        std::ofstream ofs(outFilePath, std::ios::out | std::ios::binary);
         ofs.write(buffer, fileSize);
         ofs.close();
         modified = false;

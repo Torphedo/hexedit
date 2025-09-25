@@ -6,10 +6,7 @@
 #include "Base.h"
 
 #include <curses.h>
-#include <string>
 #include <cstddef>
-
-using std::size_t;
 
 namespace Marker {
     size_t pos = 0;

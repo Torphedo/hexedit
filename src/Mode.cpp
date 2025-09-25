@@ -10,8 +10,6 @@
 #include <string>
 #include <cstddef>
 
-using std::to_string;
-
 // These values can be found by (in Vim insert mode) doing Ctrl-V, then
 // pressing the key (e.g. Ctrl-D), putting that in quotations and assigning it
 // to a char. Then you can use your LSP or print to get the value.
@@ -32,11 +30,11 @@ namespace Mode {
             ogValMsg = "";
             if (modified)
                 ogValMsg = "-- (Modified) Original Value: " +
-                to_string(Buffer::ogVal(mPos)) +
+                std::to_string(Buffer::ogVal(mPos)) +
                 " (0x" + Base::toHex(Buffer::ogVal(mPos)) + ")";
 
             G::setStatusBarText(
-                "Position: " + to_string(mPos) +
+                "Position: " + std::to_string(mPos) +
                 " (0x" + Base::toHex(mPos) + ")" +
                 " " + ogValMsg
             );
@@ -106,9 +104,9 @@ namespace Mode {
     void edit() {
         std::size_t mPos = Marker::getPos();
         G::setStatusBarText(
-            "Editing byte at: " + to_string(mPos) + " (0x" + Base::toHex(mPos) + ")" +
+            "Editing byte at: " + std::to_string(mPos) + " (0x" + Base::toHex(mPos) + ")" +
             " -- Original value = " +
-            to_string(static_cast<unsigned char>(Buffer::at(mPos))) +
+            std::to_string(static_cast<unsigned char>(Buffer::at(mPos))) +
             " (0x" + Base::toHex(Buffer::at(mPos)) + ")"
         );
 
