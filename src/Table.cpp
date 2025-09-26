@@ -60,7 +60,7 @@ namespace Table {
                 if (modified) {
                     attroff(ColorPair::MODIFIED);
                 }
-                ss << Base::toText(byte);
+                ss << Base::toAscii(byte);
     
                 if (index >= 0) {
                     endIndex = index;

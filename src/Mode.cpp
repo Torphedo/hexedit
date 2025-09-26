@@ -79,6 +79,12 @@ void updateModeNormal(Buffer& buf) {
             G::mark.moveVertical(-1);
             break;
 
+        case 'w':
+            G::mark.move(4);
+            break;
+        case 'b':
+            G::mark.move(-4);
+            break;
         case KEY_LEFT: case 'h':
             G::mark.move(-1);
             break;
@@ -117,7 +123,7 @@ void updateModeEdit(Buffer& buf) {
         const int key = getch();
         switch (key) {
         case '\n':
-            buf.set(mPos, Base::toText(newHexByte));
+            buf.set(mPos, Base::toByte(newHexByte));
             fallthrough;
         case 'q':
             Table::refresh();

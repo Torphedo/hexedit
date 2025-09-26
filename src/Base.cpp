@@ -1,63 +1,18 @@
+#include "Base.h"
 #include <string>
-#include <stdexcept>
-#include <sstream>
-#include <algorithm>
 
 namespace Base {
-    const char digits[] =
-        {'0', '1', '2', '3', '4', '5', '6', '7',
-         '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-
-    std::string pad(const std::string &str, unsigned int lenAfterPad) { 
-        if (str.length() >= lenAfterPad) {
-            return str;
-        } else {
-            return std::string(lenAfterPad - str.length(), '0') + str;
-        }
+    std::string toHex(int value, u32 lenAfterPad) {
+        char buf[64] = {};
+        snprintf(buf, sizeof(buf) - 1, "%0*x", lenAfterPad, value);
+        return buf;
     }
 
-    char hexOf(int value) {
-        if (value < 0 || value > 15) {
-            throw std::range_error("hex char not [0-15]");
-        }
-
-        return digits[value];
-    }
-
-    char charOf(char hexChar) {
-        for (int i = 0; i < 16; i++) {
-            if (digits[i] == hexChar) {
-                return i;
-            }
-        }
-
-        throw std::range_error("Base::charOf()");
-    }
-
-    std::string toHex(int value, unsigned int lenAfterPad = 2) {
-        if (value == 0) {
-            return pad("0", lenAfterPad);
-        }
-        if (value < 0) {
-            value = static_cast<unsigned char>((char) value);
-        }
-
-        std::stringstream ss;
-        while (value > 0) {
-            ss << hexOf(value % 16);
-            value /= 16;
-        }
-
-        std::string str = ss.str();
-        std::reverse(str.begin(), str.end());
-        return pad(str, lenAfterPad);
-    }
-
-    char toText(char byte) {
+    char toAscii(u8 byte) {
         return (byte > 32 && byte < 127) ? byte : '.';
     }
 
-    char toText(char *hex) {
-        return 16 * charOf(hex[0]) + charOf(hex[1]);
+    u8 toByte(char *hex) {
+        return strtoul(hex, nullptr, 16);
     }
 }

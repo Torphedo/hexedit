@@ -1,13 +1,10 @@
 #pragma once
-
 #include <string>
 
-namespace Base {
-    std::string pad(const std::string &str, unsigned int lenAfterPad);
-    char hexOf(int value);
-    char charOf(char hexChar);
+#include <common/int.h>
 
-    std::string toHex(int value, unsigned int lenAfterPad = 2);
-    char toText(char byte);
-    char toText(char *hex);
+namespace Base {
+    std::string toHex(int value, u32 lenAfterPad = 2);
+    char toAscii(u8 byte);
+    u8 toByte(char *hex);
 }

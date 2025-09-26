@@ -1,6 +1,5 @@
 #include "Marker.h"
 #include "Global.h"
-#include "Buffer.h"
 #include "Table.h"
 #include "Color.h"
 #include "Base.h"
@@ -35,7 +34,7 @@ void Marker::displayByte(int colorPair) const noexcept {
     printw(Base::toHex(buf.at(pos)));
     Table::pos2coordsText(pos, x, y);
     ::move(y, x);
-    addch(Base::toText(buf.at(pos)));
+    addch(Base::toAscii(buf.at(pos)));
 
     attroff(colorPair);
     refresh();
