@@ -1,5 +1,4 @@
-#ifndef DEC_HEX_INPUTSEQ_H
-#define DEC_HEX_INPUTSEQ_H
+#pragma once
 
 namespace InputSeq {
     void save();
@@ -7,5 +6,3 @@ namespace InputSeq {
     void undo();
     void revert();
 }
-
-#endif

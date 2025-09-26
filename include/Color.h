@@ -1,5 +1,4 @@
-#ifndef DEX_HEX_COLORS_H
-#define DEX_HEX_COLORS_H
+#pragma once
 
 #include <curses.h>
 
@@ -17,5 +16,3 @@ namespace ColorPair {
     const int HEADER = COLOR_PAIR(CPID_HEADER);
     const int MODIFIED = COLOR_PAIR(CPID_MODIFIED);
 }
-
-#endif

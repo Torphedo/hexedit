@@ -1,9 +1,6 @@
-#ifndef DEC_HEX_MODE_H
-#define DEC_HEX_MODE_H
+#pragma once
 
 namespace Mode {
     void normal();
     void edit();
 }
-
-#endif

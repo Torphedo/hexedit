@@ -1,5 +1,4 @@
-#ifndef DEC_HEX_TABLE_H
-#define DEC_HEX_TABLE_H
+#pragma once
 
 #include <cstddef>
 
@@ -10,5 +9,3 @@ namespace Table {
     void pos2coordsText(std::size_t pos, int &x, int &y);
     void scrollIntoView(std::size_t pos);
 }
-
-#endif

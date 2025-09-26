@@ -1,5 +1,4 @@
-#ifndef DEC_HEX_GLOBAL_H
-#define DEC_HEX_GLOBAL_H
+#pragma once
 
 #include <curses.h>
 #include <string>
@@ -24,5 +23,3 @@ inline void moveLeft(int n = 1) {
 inline int printw(std::string str) {
     return printw(str.c_str());
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef DEC_HEX_WARNINGS_H
-#define DEC_HEX_WARNINGS_H
+#pragma once
 
 // pragma macro
 #ifdef __GNUC__
@@ -26,6 +25,4 @@
 
     #define DISABLE_WARNING_SIGN_COMPARE()
     #define SUPPRESS_WARNING_SIGN_COMPARE()
-#endif
-
 #endif

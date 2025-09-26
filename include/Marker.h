@@ -1,5 +1,4 @@
-#ifndef DEC_HEX_MARKER_H
-#define DEC_HEX_MARKER_H
+#pragma once
 
 #include <cstddef>
 
@@ -15,5 +14,3 @@ namespace Marker {
     void hide();
     std::size_t getPos();
 }
-
-#endif

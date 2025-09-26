@@ -1,5 +1,4 @@
-#ifndef DEC_HEX_BASE_H
-#define DEC_HEX_BASE_H
+#pragma once
 
 #include <string>
 
@@ -12,5 +11,3 @@ namespace Base {
     char toText(char byte);
     char toText(char *hex);
 }
-
-#endif

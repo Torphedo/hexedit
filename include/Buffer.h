@@ -1,7 +1,5 @@
-#ifndef DEC_HEX_BUFFER_H
-#define DEC_HEX_BUFFER_H
+#pragma once
 
-#include <cstddef>
 #include <string>
 
 enum class SaveOption {
@@ -23,5 +21,3 @@ namespace Buffer {
 
     void finish();
 }
-
-#endif
