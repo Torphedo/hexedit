@@ -15,8 +15,8 @@ namespace Table {
     size_t endIndex = 0;
 
     void show(size_t fromPos/*=0*/) {
-        if (fromPos >= Buffer::size()) {
-            fromPos = Buffer::size() - 1;
+        if (fromPos >= G::buf.fileSize) {
+            fromPos = G::buf.fileSize - 1;
         }
         startIndex = fromPos;
         move(0, 0);
@@ -35,7 +35,7 @@ namespace Table {
     
         // draw the rest of the lines
         int index = fromPos;
-        int numLines = (Buffer::size() - fromPos) / G::cols + 1;
+        int numLines = (G::buf.fileSize - fromPos) / G::cols + 1;
         for (int line = 0; line < numLines && line < G::height-3; line++) {
             addch('\n');
     
@@ -52,7 +52,7 @@ namespace Table {
                 }
     
                 bool modified = false;
-                const char byte = (index == -1) ? 0 : Buffer::at(index, modified);
+                const char byte = (index == -1) ? 0 : G::buf.at(index, modified);
                 
                 if (modified) {
                     attron(ColorPair::MODIFIED);
@@ -68,7 +68,7 @@ namespace Table {
                 }
 
                 SUPPRESS_WARNING_SIGN_COMPARE()
-                if (index < Buffer::size() - 1 && index >= 0) {
+                if (index < G::buf.fileSize - 1 && index >= 0) {
                     index++;
                 } else {
                     index = -1;

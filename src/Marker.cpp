@@ -8,54 +8,51 @@
 #include <curses.h>
 #include <cstddef>
 
-namespace Marker {
-    size_t pos = 0;
+#include <common/int.h>
 
-    void setPos(size_t pos) {
-        if (pos >= Buffer::size()) {
-            return;
-        }
+void Marker::setPos(size_t pos) {
+    pos = MIN(pos, buf.fileSize);
+    hide();
+    this->pos = pos;
+    Table::scrollIntoView(pos);
+    show();
+}
 
-        hide();
-        Marker::pos = pos;
-        Table::scrollIntoView(pos);
-        show();
-    }
+size_t Marker::getPos() { return pos; }
 
-    size_t getPos() { return pos; }
+void Marker::jumpUp()       { setPos(pos - 10 * G::cols); }
+void Marker::jumpDown()     { setPos(pos + 10 * G::cols); }
+void Marker::moveUp()       { setPos(pos - G::cols); }
+void Marker::moveDown()     { setPos(pos + G::cols); }
+void Marker::moveLeft()     { setPos(pos - 1); }
+void Marker::moveRight()    { setPos(pos + 1); }
+void Marker::moveToOrigin() { setPos(0); }
+void Marker::moveToEnd() {
+    this->pos = buf.fileSize - 1;
+}
 
-    void jumpUp()       { setPos(pos - 10 * G::cols); }
-    void jumpDown()     { setPos(pos + 10 * G::cols); }
-    void moveUp()       { setPos(pos - G::cols); }
-    void moveDown()     { setPos(pos + G::cols); }
-    void moveLeft()     { setPos(pos - 1); }
-    void moveRight()    { setPos(pos + 1); }
-    void moveToOrigin() { setPos(0); }
-    void moveToEnd() { setPos(Buffer::size() - 1); }
+void Marker::displayByte(int colorPair) {
+    int x, y;
+    attron(colorPair);
 
-    void displayByte(int colorPair) {
-        int x, y;
-        attron(colorPair);
+    Table::pos2coords(pos, x, y);
+    move(y, x);
+    printw(Base::toHex(buf.at(pos)));
+    Table::pos2coordsText(pos, x, y);
+    move(y, x);
+    addch(Base::toText(buf.at(pos)));
 
-        Table::pos2coords(pos, x, y);
-        move(y, x);
-        printw(Base::toHex(Buffer::at(pos)));
-        Table::pos2coordsText(pos, x, y);
-        move(y, x);
-        addch(Base::toText(Buffer::at(pos)));
-        
-        attroff(colorPair);
-        refresh();
-    }
+    attroff(colorPair);
+    refresh();
+}
 
-    void show() {
-        displayByte(ColorPair::HIGHLIGHT);
-    }
+void Marker::show() {
+    displayByte(ColorPair::HIGHLIGHT);
+}
 
-    void hide() {
-        bool modified;
-        Buffer::at(pos, modified);
+void Marker::hide() {
+    bool modified;
+    buf.at(pos, modified);
 
-        displayByte(modified ? ColorPair::MODIFIED : ColorPair::DEFAULT);
-    }
+    displayByte(modified ? ColorPair::MODIFIED : ColorPair::DEFAULT);
 }

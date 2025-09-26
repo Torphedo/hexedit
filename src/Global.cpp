@@ -7,7 +7,9 @@ namespace G {
     int height = 0;
     int width = 0;
     int cols = 0;
-    
+    Buffer buf;
+    Marker mark(buf);
+
     void setStatusBarText(std::string text) {
         // clear the status bar first
         move(G::height-1, 0);

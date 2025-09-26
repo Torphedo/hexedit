@@ -8,7 +8,6 @@
 #include "Mode.h"
 
 #include <curses.h>
-#include <iostream>
 #include <cstdio>
 #include <string>
 
@@ -58,7 +57,7 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    const std::string fileName = operands[0];
+    const char* fileName = operands[0].c_str();
     const bool stdColors = ap.isSwitchSet("s") || ap.isSwitchSet("std-colors");
 
     int columns = 16;
@@ -79,13 +78,12 @@ int main(int argc, char **argv) {
     Colors::init(stdColors);
     keypad(stdscr, TRUE);
 
-    Buffer::load(fileName);
+    G::buf.load(fileName);
     Table::show();
-    Marker::show();
+    G::mark.show();
     G::setStatusBarText("File Ready");
-    Mode::normal();
-    
+    updateModeNormal(G::buf);
+
     endwin();
-    Buffer::finish();
     return EXIT_SUCCESS;
 }

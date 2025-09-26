@@ -1,6 +1,5 @@
 #pragma once
+#include "Buffer.h"
 
-namespace Mode {
-    void normal();
-    void edit();
-}
+void updateModeNormal(Buffer& buf);
+void updateModeEdit(Buffer& buf);

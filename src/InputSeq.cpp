@@ -13,16 +13,16 @@ namespace InputSeq {
         const int key = getch();
         switch (key) {
         case 's':
-            Buffer::save(SaveOption::SAME_FILE);
+            G::buf.save(SaveOption::SAME_FILE);
             break;
         case 'n':
-            Buffer::save(SaveOption::NEW_FILE);
+            G::buf.save(SaveOption::NEW_FILE);
             break;
         }
     }
 
     bool quit() {
-        if (!Buffer::isModified()) {
+        if (!G::buf.isModified()) {
             return true;
         }
 
@@ -34,7 +34,7 @@ namespace InputSeq {
     }
 
     void revert() {
-        if (Buffer::isModified()) {
+        if (G::buf.isModified()) {
             G::setStatusBarText(
                 "-- (r)-Revert sequence -- [r=undo all changes]");
         } else {
@@ -43,16 +43,16 @@ namespace InputSeq {
         }
 
         const int key = getch();
-        if (key == 'r' && Buffer::isModified()) {
-            Buffer::revert();
+        if (key == 'r' && G::buf.isModified()) {
+            G::buf.revert();
             Table::refresh();
-            Marker::show();
+            G::mark.show();
         }
     }
 
     void undo() {
-        Buffer::undo(Marker::getPos());
+        G::buf.undo(G::mark.getPos());
         Table::refresh();
-        Marker::show();
+        G::mark.show();
     }
 }

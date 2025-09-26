@@ -1,23 +1,31 @@
 #pragma once
 
 #include <string>
+#include <map>
 
 enum class SaveOption {
     SAME_FILE, NEW_FILE
 };
 
-namespace Buffer {
-    void load(std::string filePath);
-    void save(SaveOption option);
-    
-    std::size_t size();
-    char at(std::size_t pos);
-    char at(std::size_t pos, bool &modified);
-    void set(std::size_t pos, char newByte);
-    bool isModified();
-    void revert();
-    void undo(std::size_t pos);
-    int ogVal(std::size_t pos);
+struct Buffer {
+    size_t fileSize = 0;
+    std::string filePath;
+    char* buffer = nullptr;
+    bool modified = false;
+    std::map<int, int> og;
 
-    void finish();
-}
+    void load(const char* filePath) noexcept;
+    void save(SaveOption option) noexcept;
+    
+    char at(std::size_t pos) const noexcept;
+    char at(std::size_t pos, bool &modified) const noexcept;
+    void set(std::size_t pos, char newByte) noexcept;
+    bool isModified() const noexcept {
+        return modified;
+    }
+    void revert() noexcept;
+    void undo(std::size_t pos) noexcept;
+    int ogVal(std::size_t pos) noexcept;
+
+    ~Buffer();
+};
