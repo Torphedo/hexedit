@@ -1,7 +1,6 @@
 #include "Mode.h"
 #include "InputSeq.h"
 #include "Buffer.h"
-#include "Marker.h"
 #include "Global.h"
 #include "Table.h"
 #include "Base.h"
@@ -24,7 +23,7 @@ void updateModeNormal(Buffer& buf) {
     size_t mPos = 0;
     std::string ogValMsg;
     while (true) {
-        mPos = G::mark.getPos();
+        mPos = G::mark.pos;
         buf.at(mPos, modified);
         ogValMsg = "";
         if (modified) {
@@ -60,40 +59,32 @@ void updateModeNormal(Buffer& buf) {
             break;
 
         case CONTROL_U:
-            for (int i = 0; i < 10; i++) {
-                G::mark.moveUp();
-            }
+            G::mark.moveVertical(10);
             break;
         case CONTROL_D:
-            for (int i = 0; i < 10; i++) {
-                G::mark.moveDown();
-            }
+            G::mark.moveVertical(-10);
             break;
         case 'g': // Not really correct, but proper logic for 'gg' is annoying
-            for (int i = 0; i < 10; i++) {
-                G::mark.moveToOrigin();
-            }
+            G::mark.setPos(0);
             break;
         case 'G':
-            for (int i = 0; i < 10; i++) {
-                G::mark.moveToEnd();
-            }
+            G::mark.setPos(buf.fileSize - 1);
             break;
 
         case KEY_UP: case 'k':
-            G::mark.moveUp();
+            G::mark.moveVertical(1);
             break;
 
         case KEY_DOWN: case 'j':
-            G::mark.moveDown();
+            G::mark.moveVertical(-1);
             break;
 
         case KEY_LEFT: case 'h':
-            G::mark.moveLeft();
+            G::mark.move(-1);
             break;
 
         case KEY_RIGHT: case 'l':
-            G::mark.moveRight();
+            G::mark.move(1);
             break;
 
         case '\n': case 'i':
@@ -104,7 +95,7 @@ void updateModeNormal(Buffer& buf) {
 }
 
 void updateModeEdit(Buffer& buf) {
-    const std::size_t mPos = G::mark.getPos();
+    const std::size_t mPos = G::mark.pos;
     G::setStatusBarText(
         "Editing byte at: " + std::to_string(mPos) + " (0x" + Base::toHex(mPos) + ")" +
         " -- Original value = " +

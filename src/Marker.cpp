@@ -10,7 +10,7 @@
 
 #include <common/int.h>
 
-void Marker::setPos(size_t pos) {
+void Marker::setPos(size_t pos) noexcept {
     pos = MIN(pos, buf.fileSize);
     hide();
     this->pos = pos;
@@ -18,39 +18,34 @@ void Marker::setPos(size_t pos) {
     show();
 }
 
-size_t Marker::getPos() { return pos; }
-
-void Marker::jumpUp()       { setPos(pos - 10 * G::cols); }
-void Marker::jumpDown()     { setPos(pos + 10 * G::cols); }
-void Marker::moveUp()       { setPos(pos - G::cols); }
-void Marker::moveDown()     { setPos(pos + G::cols); }
-void Marker::moveLeft()     { setPos(pos - 1); }
-void Marker::moveRight()    { setPos(pos + 1); }
-void Marker::moveToOrigin() { setPos(0); }
-void Marker::moveToEnd() {
-    this->pos = buf.fileSize - 1;
+void Marker::move(s16 diff) noexcept {
+    setPos(pos + diff);
+}
+void Marker::moveVertical(s16 diff) noexcept {
+    diff = -diff; // Make negative values be visually up and vice versa
+    move(diff * G::cols);
 }
 
-void Marker::displayByte(int colorPair) {
+void Marker::displayByte(int colorPair) const noexcept {
     int x, y;
     attron(colorPair);
 
     Table::pos2coords(pos, x, y);
-    move(y, x);
+    ::move(y, x);
     printw(Base::toHex(buf.at(pos)));
     Table::pos2coordsText(pos, x, y);
-    move(y, x);
+    ::move(y, x);
     addch(Base::toText(buf.at(pos)));
 
     attroff(colorPair);
     refresh();
 }
 
-void Marker::show() {
+void Marker::show() const noexcept {
     displayByte(ColorPair::HIGHLIGHT);
 }
 
-void Marker::hide() {
+void Marker::hide() const noexcept {
     bool modified;
     buf.at(pos, modified);
 

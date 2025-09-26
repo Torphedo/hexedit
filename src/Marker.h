@@ -1,26 +1,21 @@
 #pragma once
-
 #include <cstddef>
+#include <common/int.h>
+
 #include "Buffer.h"
 
 struct Marker {
     size_t pos = 0;
     const Buffer& buf;
-    Marker(const Buffer& buf) : buf(buf) {}
+    explicit Marker(const Buffer& buf) : buf(buf) {}
 
-    void moveUp();
-    void moveDown();
-    void moveLeft();
-    void moveRight();
-    void moveToOrigin();
-    void moveToEnd();
-    void jumpUp();
-    void jumpDown();
+    // Positive values are visually up, not "up" as in forward in the buffer
+    void moveVertical(s16 diff) noexcept;
+    void move(s16 diff) noexcept;
 
-    void displayByte(int colorPair);
+    void displayByte(int colorPair) const noexcept;
 
-    void show();
-    void hide();
-    std::size_t getPos();
-    void setPos(size_t pos);
+    void show() const noexcept;
+    void hide() const noexcept;
+    void setPos(size_t pos) noexcept;
 };

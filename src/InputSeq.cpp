@@ -2,7 +2,6 @@
 #include "Buffer.h"
 #include "Global.h"
 #include "Table.h"
-#include "Marker.h"
 
 #include <curses.h>
 
@@ -51,7 +50,7 @@ namespace InputSeq {
     }
 
     void undo() {
-        G::buf.undo(G::mark.getPos());
+        G::buf.undo(G::mark.pos);
         Table::refresh();
         G::mark.show();
     }
