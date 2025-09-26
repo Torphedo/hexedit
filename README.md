@@ -1,5 +1,6 @@
 # Hexedit
-Hexedit is a TUI-based hex editor.
+Hexedit is a TUI-based hex editor. This is a fork of `dcdeepesh`'s hex editor.
+The internals have been rewritten and more motions added.
 
 ![Hexedit editing itself](https://github.com/dcdeepesh/hexedit/blob/master/Documentation/images/Home.png)
 
