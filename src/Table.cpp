@@ -15,8 +15,9 @@ namespace Table {
     size_t endIndex = 0;
 
     void show(size_t fromPos/*=0*/) {
-        if (fromPos >= Buffer::size())
+        if (fromPos >= Buffer::size()) {
             fromPos = Buffer::size() - 1;
+        }
         startIndex = fromPos;
         move(0, 0);
     
@@ -24,8 +25,9 @@ namespace Table {
         attron(ColorPair::HEADER);
         moveRight(G::isz + 1);
         for (int i = 0; i < G::cols; i++) {
-            if (i % 4 == 0)
+            if (i % 4 == 0) {
                 addch(' ');
+            }
             printw(Base::toHex(i) + " ");
         }
         attroff(ColorPair::HEADER);
@@ -45,32 +47,40 @@ namespace Table {
             // hex data
             std::stringstream ss;
             for (int i = 0; i < G::cols; i++) {
-                if (i % 4 == 0)
+                if (i % 4 == 0) {
                     addch(' ');
+                }
     
                 bool modified = false;
-                char byte =
-                    index == -1 ? 0 : Buffer::at(index, modified);
+                const char byte = (index == -1) ? 0 : Buffer::at(index, modified);
                 
-                if (modified) attron(ColorPair::MODIFIED);
+                if (modified) {
+                    attron(ColorPair::MODIFIED);
+                }
                 printw(Base::toHex(byte) + " ");
-                if (modified) attroff(ColorPair::MODIFIED);
+                if (modified) {
+                    attroff(ColorPair::MODIFIED);
+                }
                 ss << Base::toText(byte);
     
-                if (index >= 0)
+                if (index >= 0) {
                     endIndex = index;
+                }
 
                 SUPPRESS_WARNING_SIGN_COMPARE()
-                if (index < Buffer::size() - 1 && index >= 0)
+                if (index < Buffer::size() - 1 && index >= 0) {
                     index++;
-                else index = -1;
+                } else {
+                    index = -1;
+                }
                 RESTORE_WARNING_STATE()
             }
     
             // string data (on the right)
             addch(' ');
-            for (char c : ss.str())
+            for (char c : ss.str()) {
                 addch(c);
+            }
         }
     
         ::refresh();
@@ -81,26 +91,24 @@ namespace Table {
     }
 
     void pos2coords(size_t pos, int &x, int &y) {
-        x = 0; y = 0;
-        int scrOffset = pos - startIndex;
+        const int scrOffset = pos - startIndex;
 
         y = scrOffset / G::cols;
         y += 2;     // top 2 lines
 
-        int xOffset = scrOffset % G::cols;
+        const int xOffset = scrOffset % G::cols;
         x = xOffset * 3;    // 2 hex digits, one space, each
         x += G::isz + 2;    // left column + 2 spaces
         x += xOffset / 4;   // extra spaces every 4 bytes
     }
 
     void pos2coordsText(size_t pos, int &x, int &y) {
-        x = 0; y = 0;
-        int scrOffset = pos - startIndex;
+        const int scrOffset = pos - startIndex;
 
         y = scrOffset / G::cols;
         y += 2;     // top 2 lines
 
-        int xOffset = scrOffset % G::cols;
+        const int xOffset = scrOffset % G::cols;
         x = G::cols * 3;    // 2 hex digits, one space, each
         x += G::isz + 2;    // left column + 2 spaces
         x += std::ceil(G::cols / 4.0) - 1;   // extra spaces every 4 bytes
@@ -109,16 +117,17 @@ namespace Table {
     }
 
     void scrollIntoView(size_t pos) {
-        if (pos >= startIndex && pos <= endIndex)
+        if (pos >= startIndex && pos <= endIndex) {
             return;
-        else if (pos < startIndex)
+        }
+        else if (pos < startIndex) {
             show(pos - pos % G::cols);
-        else {
+        } else {
             // we know that the last line should contain pos,
             // so now we calculate the new minIndexInView
-            int maxLinesInView = G::height - 3;
-            int lineBeg = pos - pos % G::cols;
-            int newMinIndex = lineBeg - (maxLinesInView - 1) * G::cols;
+            const int maxLinesInView = G::height - 3;
+            const int lineBeg = pos - pos % G::cols;
+            const int newMinIndex = lineBeg - (maxLinesInView - 1) * G::cols;
             show(newMinIndex);
         }
     }

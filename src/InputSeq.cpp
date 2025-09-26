@@ -10,37 +10,39 @@ namespace InputSeq {
     void save() {
         G::setStatusBarText(
             "-- (s)-Save sequence -- [s=same file, n=new file]");
-        int key = getch();
+        const int key = getch();
         switch (key) {
-            case 's':
-                Buffer::save(SaveOption::SAME_FILE);
-                break;
-            case 'n':
-                Buffer::save(SaveOption::NEW_FILE);
-                break;
+        case 's':
+            Buffer::save(SaveOption::SAME_FILE);
+            break;
+        case 'n':
+            Buffer::save(SaveOption::NEW_FILE);
+            break;
         }
     }
 
     bool quit() {
-        if (!Buffer::isModified())
+        if (!Buffer::isModified()) {
             return true;
+        }
 
         G::setStatusBarText(
             "-- (q)-Quit sequence - There are unsaved changes -- [q=quit without saving]");
 
-        int key = getch();
+        const int key = getch();
         return key == 'q';
     }
 
     void revert() {
-        if (Buffer::isModified())
+        if (Buffer::isModified()) {
             G::setStatusBarText(
                 "-- (r)-Revert sequence -- [r=undo all changes]");
-        else
+        } else {
             G::setStatusBarText(
                 "-- (r)-Revert sequence -- (No unsaved changes)");
+        }
 
-        int key = getch();
+        const int key = getch();
         if (key == 'r' && Buffer::isModified()) {
             Buffer::revert();
             Table::refresh();

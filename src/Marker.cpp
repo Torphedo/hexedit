@@ -12,8 +12,9 @@ namespace Marker {
     size_t pos = 0;
 
     void setPos(size_t pos) {
-        if (pos >= Buffer::size())
+        if (pos >= Buffer::size()) {
             return;
+        }
 
         hide();
         Marker::pos = pos;

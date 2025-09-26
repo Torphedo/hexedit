@@ -5,9 +5,9 @@
 #include <map>
 
 namespace Buffer {
-    char *buffer;
+    char *buffer = nullptr;
     std::string filePath;
-    size_t fileSize;
+    size_t fileSize = 0;
     bool modified = false;
     std::map<int, int> og;
 
@@ -41,10 +41,11 @@ namespace Buffer {
     size_t size() { return fileSize; }
 
     char at(size_t pos) {
-        if (pos > fileSize)
+        if (pos > fileSize) {
             throw std::range_error("Buffer::at()");
-        else
+        } else {
             return buffer[pos];
+        }
     }
 
     char at(size_t pos, bool &modified) {
@@ -53,34 +54,39 @@ namespace Buffer {
     }
 
     void set(size_t pos, char newByte) {
-        if (pos > fileSize)
+        if (pos > fileSize) {
             throw std::range_error("Buffer::set()");
+        }
 
-        if (buffer[pos] == newByte)
+        if (buffer[pos] == newByte) {
             return;
+        }
 
         auto iter = og.find(pos);
-        if (iter == og.end())             // first change
+        if (iter == og.end()) {           // first change
             og[pos] = buffer[pos];
-        else if (iter->second == newByte) // changing back to og
+        }
+        else if (iter->second == newByte) { // changing back to og
             og.erase(pos);
-        else {}                           // changed, but changing more
+        }
 
         buffer[pos] = newByte;
         modified = !og.empty();
     }
 
     void revert() {
-        for (auto iter : og)
+        for (auto iter : og) {
             buffer[iter.first] = iter.second;
+        }
 
         og.clear();
         modified = false;
     }
 
     void undo(std::size_t pos) {
-        if (og.find(pos) == og.end())
+        if (og.find(pos) == og.end()) {
             return;
+        }
             
         buffer[pos] = og.find(pos)->second;
         og.erase(pos);

@@ -20,18 +20,18 @@ enum special_keys {
 
 namespace Mode {
     void normal() {
-        int key;
-        bool modified;
-        size_t mPos;
+        bool modified = false;
+        size_t mPos = 0;
         std::string ogValMsg;
         while (true) {
             mPos = Marker::getPos();
             Buffer::at(mPos, modified);
             ogValMsg = "";
-            if (modified)
+            if (modified) {
                 ogValMsg = "-- (Modified) Original Value: " +
                 std::to_string(Buffer::ogVal(mPos)) +
                 " (0x" + Base::toHex(Buffer::ogVal(mPos)) + ")";
+            }
 
             G::setStatusBarText(
                 "Position: " + std::to_string(mPos) +
@@ -39,70 +39,72 @@ namespace Mode {
                 " " + ogValMsg
             );
 
-            key = getch();
+            const int key = getch();
             switch (key) {
-                case 'q':
-                    if (InputSeq::quit()) return;
-                    else break;
+            case 'q':
+                if (InputSeq::quit()) {
+                    return;
+                }
+                break;
 
-                case 'u':
-                    InputSeq::undo();
-                    break;
+            case 'u':
+                InputSeq::undo();
+                break;
 
-                case 'r':
-                    InputSeq::revert();
-                    break;
-                    
-                case 's':
-                    InputSeq::save();
-                    break;
+            case 'r':
+                InputSeq::revert();
+                break;
+                
+            case 's':
+                InputSeq::save();
+                break;
 
-                case CONTROL_U:
-                    for (int i = 0; i < 10; i++) {
-                        Marker::moveUp();
-                    }
-                    break;
-                case CONTROL_D:
-                    for (int i = 0; i < 10; i++) {
-                        Marker::moveDown();
-                    }
-                    break;
-                case 'g': // Not really correct, but proper logic for 'gg' is annoying
-                    for (int i = 0; i < 10; i++) {
-                        Marker::moveToOrigin();
-                    }
-                    break;
-                case 'G':
-                    for (int i = 0; i < 10; i++) {
-                        Marker::moveToEnd();
-                    }
-                    break;
-
-                case KEY_UP: case 'k':
+            case CONTROL_U:
+                for (int i = 0; i < 10; i++) {
                     Marker::moveUp();
-                    break;
-
-                case KEY_DOWN: case 'j':
+                }
+                break;
+            case CONTROL_D:
+                for (int i = 0; i < 10; i++) {
                     Marker::moveDown();
-                    break;
+                }
+                break;
+            case 'g': // Not really correct, but proper logic for 'gg' is annoying
+                for (int i = 0; i < 10; i++) {
+                    Marker::moveToOrigin();
+                }
+                break;
+            case 'G':
+                for (int i = 0; i < 10; i++) {
+                    Marker::moveToEnd();
+                }
+                break;
 
-                case KEY_LEFT: case 'h':
-                    Marker::moveLeft();
-                    break;
+            case KEY_UP: case 'k':
+                Marker::moveUp();
+                break;
 
-                case KEY_RIGHT: case 'l':
-                    Marker::moveRight();
-                    break;
+            case KEY_DOWN: case 'j':
+                Marker::moveDown();
+                break;
 
-                case '\n': case 'i':
-                    Mode::edit();
-                    break;
+            case KEY_LEFT: case 'h':
+                Marker::moveLeft();
+                break;
+
+            case KEY_RIGHT: case 'l':
+                Marker::moveRight();
+                break;
+
+            case '\n': case 'i':
+                Mode::edit();
+                break;
             }
         }
     }
 
     void edit() {
-        std::size_t mPos = Marker::getPos();
+        const std::size_t mPos = Marker::getPos();
         G::setStatusBarText(
             "Editing byte at: " + std::to_string(mPos) + " (0x" + Base::toHex(mPos) + ")" +
             " -- Original value = " +
@@ -120,34 +122,35 @@ namespace Mode {
         char newHexByte[3];
         innstr(newHexByte, 2);
 
-        int key;
         while (true) {
-            key = getch();
+            const int key = getch();
             switch (key) {
-                case '\n':
-                    Buffer::set(mPos, Base::toText(newHexByte));
-                    [[fallthrough]];
-                case 'q':
-                    Table::refresh();
-                    curs_set(0);
-                    Marker::show();
-                    return;
+            case '\n':
+                Buffer::set(mPos, Base::toText(newHexByte));
+                [[fallthrough]];
+            case 'q':
+                Table::refresh();
+                curs_set(0);
+                Marker::show();
+                return;
 
-                case KEY_LEFT:
-                case KEY_RIGHT:
-                    curLeft ? moveRight() : moveLeft();
-                    curLeft = !curLeft;
-                    break;
+            case KEY_LEFT:
+            case KEY_RIGHT:
+                curLeft ? moveRight() : moveLeft();
+                curLeft = !curLeft;
+                break;
 
-                case '0': case '1': case '2': case '3':
-                case '4': case '5': case '6': case '7':
-                case '8': case '9': case 'a': case 'b':
-                case 'c': case 'd': case 'e': case 'f':
-                    addch(key);
-                    newHexByte[curLeft ? 0 : 1] = key;
-                    if (!curLeft) moveLeft(2);
-                    curLeft = !curLeft;
-                    break;
+            case '0': case '1': case '2': case '3':
+            case '4': case '5': case '6': case '7':
+            case '8': case '9': case 'a': case 'b':
+            case 'c': case 'd': case 'e': case 'f':
+                addch(key);
+                newHexByte[curLeft] = key;
+                if (!curLeft) {
+                    moveLeft(2);
+                }
+                curLeft = !curLeft;
+                break;
             }
         }
     }

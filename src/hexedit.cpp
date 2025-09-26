@@ -4,66 +4,70 @@
 #include "Global.h"
 #include "Marker.h"
 #include "Color.h"
-#include "Base.h"
 #include "Table.h"
 #include "Mode.h"
 
 #include <curses.h>
 #include <iostream>
+#include <cstdio>
 #include <string>
 
-std::string HELP_MSG =
-    "Hexedit version 1.0\n"
-    "A TUI hex editor\n\n"
-    "Usage: hexedit [OPTIONS] <file>\n"
-    "Options:\n"
-    "  -h, --help         Print this help message\n"
-    "  -s, --std-colors   Use standard colors, instead of default terminal colors\n"
-    "                     Enable this if there are issues with default colors.\n"
-    "  -c <cols>,         Set the number of columns. Recommended: 4, 8, 16, 32.\n"
-    "    --columns=<cols> There are no restrictions on this number, but columns\n"
-    "                     wider than screen can misbehave.\n\n"
-    "Note: If you're having color issues (e.g. when your terminal uses light mode),\n"
-    "      use option '-s' or '--std-colors'";
+const char* HELP_MSG = R"(Hexedit version 1.0
+A TUI hex editor
 
-std::string SHORT_HELP_MSG =
-    "No file provided.\n"
-    "Usage: hexedit [OPTIONS] <file>\n"
-    "Use option '-h' or --help' to get complete help.";
+Usage: hexedit [OPTIONS] <file>
+Options:
+  -h, --help         Print this help message
+  -s, --std-colors   Use standard colors, instead of default terminal colors
+                     Enable this if there are issues with default colors.
+  -c <cols>,         Set the number of columns. Recommended: 4, 8, 16, 32.
+    --columns=<cols> There are no restrictions on this number, but columns
+                     wider than screen can misbehave.
+
+Note: If you're having color issues (e.g. when your terminal uses light mode),
+      use option '-s' or '--std-colors'
+)";
+
+const char* SHORT_HELP_MSG = R"(No file provided.
+Usage: hexedit [OPTIONS] <file>
+Use option '-h' or --help' to get complete help.
+)";
 
 int main(int argc, char **argv) {
     if (argc < 2) {
-        std::cout << SHORT_HELP_MSG << std::endl;
-        return 1;
+        printf("%s\n", SHORT_HELP_MSG);
+        return EXIT_FAILURE;
     }
     
     ArgParser ap(argc, argv, "hs", "c");
     try {
         ap.parse();
     } catch (const ArgParseException &e) {
-        std::cout << e.what() << std::endl;
+        printf("Argument parsing error: %s\n", e.what());
         return 2;
     }
 
     if (ap.isSwitchSet("h") || ap.isSwitchSet("help")) {
-        std::cout << HELP_MSG << std::endl;
-        return 0;
+        printf("%s\n", HELP_MSG);
+        return EXIT_SUCCESS;
     }
 
-    auto operands = ap.getOperands();
+    const std::vector<std::string> operands = ap.getOperands();
     if (operands.size() == 0) {
-        std::cout << SHORT_HELP_MSG << std::endl;
-        return 1;
+        printf("%s\n", SHORT_HELP_MSG);
+        return EXIT_FAILURE;
     }
 
-    std::string fileName = operands[0];
-    bool stdColors = ap.isSwitchSet("s") || ap.isSwitchSet("std-colors");
+    const std::string fileName = operands[0];
+    const bool stdColors = ap.isSwitchSet("s") || ap.isSwitchSet("std-colors");
 
     int columns = 16;
-    if (ap.isDataOptSet("c"))
+    if (ap.isDataOptSet("c")) {
         columns = std::stoi(ap.getDataForOpt("c"));
-    if (ap.isDataOptSet("columns"))
+    }
+    if (ap.isDataOptSet("columns")) {
         columns = std::stoi(ap.getDataForOpt("columns"));
+    }
     G::cols = columns;
     
     initscr();
@@ -83,5 +87,5 @@ int main(int argc, char **argv) {
     
     endwin();
     Buffer::finish();
-    return 0;
+    return EXIT_SUCCESS;
 }
