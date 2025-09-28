@@ -21,7 +21,7 @@ namespace InputSeq {
     }
 
     bool quit() {
-        if (!G::buf.isModified()) {
+        if (!G::buf.modified) {
             return true;
         }
 
@@ -33,7 +33,7 @@ namespace InputSeq {
     }
 
     void revert() {
-        if (G::buf.isModified()) {
+        if (G::buf.modified) {
             G::setStatusBarText(
                 "-- (r)-Revert sequence -- [r=undo all changes]");
         } else {
@@ -42,7 +42,7 @@ namespace InputSeq {
         }
 
         const int key = getch();
-        if (key == 'r' && G::buf.isModified()) {
+        if (key == 'r' && G::buf.modified) {
             G::buf.revert();
             Table::refresh();
             G::mark.show();

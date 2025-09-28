@@ -8,7 +8,7 @@
 void Buffer::load(const char* file) noexcept {
     filePath = file;
     fileSize = file_size(file);
-    buffer = (char*)file_load(file);
+    buffer = file_load(file);
 }
 
 void Buffer::save(SaveOption option) noexcept {
@@ -30,22 +30,22 @@ void Buffer::save(SaveOption option) noexcept {
     modified = false;
 }
 
-char Buffer::at(size_t pos) const noexcept {
+u8 Buffer::at(size_t pos) const noexcept {
     if (pos > fileSize) {
-        throw std::range_error("Buffer::at()");
+        return 0;
     } else {
         return buffer[pos];
     }
 }
 
-char Buffer::at(size_t pos, bool &modified) const noexcept {
+u8 Buffer::at(size_t pos, bool &modified) const noexcept {
     modified = og.find(pos) != og.end();
     return at(pos);
 }
 
-void Buffer::set(size_t pos, char newByte) noexcept {
+void Buffer::set(size_t pos, u8 newByte) noexcept {
     if (pos > fileSize) {
-        throw std::range_error("Buffer::set()");
+        return;
     }
 
     if (buffer[pos] == newByte) {
