@@ -70,14 +70,10 @@ namespace Mode {
                     }
                     break;
                 case 'g': // Not really correct, but proper logic for 'gg' is annoying
-                    for (int i = 0; i < 10; i++) {
-                        Marker::moveToOrigin();
-                    }
+                    Marker::moveToOrigin();
                     break;
                 case 'G':
-                    for (int i = 0; i < 10; i++) {
-                        Marker::moveToEnd();
-                    }
+                    Marker::moveToEnd();
                     break;
 
                 case KEY_UP: case 'k':
